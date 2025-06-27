@@ -16,14 +16,14 @@ public class ErrorHandler {
     @ExceptionHandler({ConstraintViolationException.class, ScoringException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse validateException(RuntimeException e) {
-        log.info(e.getMessage());
+        log.error(e.getMessage());
         return new ErrorResponse(HttpStatus.BAD_REQUEST, e.getMessage());
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse validateException(MethodArgumentNotValidException e) {
-        log.info(e.getMessage());
+        log.error(e.getMessage());
         String message = e.getBindingResult().getAllErrors().stream()
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .findFirst()
@@ -31,9 +31,10 @@ public class ErrorHandler {
         return new ErrorResponse(HttpStatus.BAD_REQUEST, message);
     }
 
+    @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handleThrowable(Throwable e) {
-        log.info(e.getMessage());
+        log.error(e.getMessage());
         return new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
     }
 }
