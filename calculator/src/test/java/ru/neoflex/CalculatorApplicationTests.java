@@ -1,13 +1,13 @@
-package ru.neoflex.neoflex_credit_bank;
+package ru.neoflex;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class NeoflexCreditBankApplicationTests {
+class CalculatorApplicationTests {
 
-	@Test
-	void contextLoads() {
-	}
+    @Test
+    void contextLoads() {
+    }
 
 }
