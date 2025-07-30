@@ -1,4 +1,4 @@
-package ru.neoflex.statement;
+package ru.neoflex.deal;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
