@@ -2,24 +2,19 @@ package ru.neoflex.deal.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.neoflex.statement.annotation.MinEighteenYearsBeforeDate;
+import ru.neoflex.deal.annotation.MinEighteenYearsBeforeDate;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import static ru.neoflex.deal.util.DateConstant.DATE_PATTERN;
 import static ru.neoflex.deal.util.StringPatterns.PASSPORT_NUMBER;
 import static ru.neoflex.deal.util.StringPatterns.PASSPORT_SERIES;
-import static ru.neoflex.deal.util.DateConstant.DATE_PATTERN;
-
 
 @Schema(description = "Заявка на кредит")
 @Data
@@ -33,7 +28,7 @@ public class LoanStatementRequestDto {
     @Min(value = 30000, message = "Сумма кредита должна быть больше или равна 30 000.00 рублей")
     private BigDecimal amount;
 
-    @Schema(description = "Срок кредита в месяцах", example = "7")
+    @Schema(description = "Срок кредита в месяцах", example = "6")
     @NotNull(message = "Необходимо указать срок кредита в месяцах")
     @Min(value = 6, message = "Срок кредита должен быть больше или равен 6ти месяцам")
     private Integer term;

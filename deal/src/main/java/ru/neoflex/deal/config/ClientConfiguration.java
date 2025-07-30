@@ -1,14 +1,14 @@
-package ru.neoflex.statement.config;
+package ru.neoflex.deal.config;
 
 import feign.Logger;
 import feign.codec.ErrorDecoder;
 import org.springframework.context.annotation.Bean;
-import ru.neoflex.statement.feign.CustomErrorDecoder;
+import ru.neoflex.deal.feign.CustomErrorDecoder;
 
-public class CalculatorFeignClientConfiguration {
+public class ClientConfiguration {
     @Bean
     Logger.Level feignLoggerLevel() {
-        return Logger.Level.FULL;
+        return Logger.Level.BASIC;
     }
 
     @Bean

@@ -14,6 +14,6 @@ public class DealFeignClientConfiguration {
     @Bean
     public ErrorDecoder errorDecoder() {
         return new CustomErrorDecoder();
+
     }
-}
 }
