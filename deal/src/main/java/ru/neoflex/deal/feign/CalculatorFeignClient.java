@@ -7,7 +7,7 @@ import ru.neoflex.deal.dto.CreditDto;
 import ru.neoflex.deal.dto.LoanOfferDto;
 import ru.neoflex.deal.dto.LoanStatementRequestDto;
 import ru.neoflex.deal.dto.ScoringDataDto;
-import ru.neoflex.statement.config.CalculatorFeignClientConfiguration;
+import ru.neoflex.deal.config.CalculatorFeignClientConfiguration;
 
 
 import java.util.List;
