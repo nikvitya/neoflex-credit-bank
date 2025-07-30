@@ -1,0 +1,46 @@
+server:
+  port: 8082
+
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/credit-bank
+    username: postgres
+    password: nikvitya
+
+  liquibase:
+    change-log: classpath:/db/changelog/db.changelog-master.xml
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        show-sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  sql:
+    init:
+      mode: never
+
+logging:
+  level:
+    org:
+      springframework:
+        orm:
+          jpa: debug
+          JpaTransactionManager: debug
+        transaction: info
+        web:
+          servlet:
+            DispatcherServlet: debug
+      hibernate:
+        SQL: debug
+        type:
+          descriptor:
+            sql:
+              BasicBinder: trace
+    web: info
+
+calculator:
+  url: 'http://localhost:8081/calculator'
