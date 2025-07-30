@@ -1,4 +1,4 @@
-package ru.neoflex.deal.config;
+package ru.neoflex.statement.config;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Contact;
@@ -6,8 +6,8 @@ import io.swagger.v3.oas.annotations.info.Info;
 
 @OpenAPIDefinition(
         info = @Info(
-                title = "Credit Deal",
-                description = "Credit parameters calculation, choosing loan offer and saving data", version = "1.0.0",
+                title = "Statement",
+                description = "Prescoring, calculating of 4 loan offers and choosing one of them", version = "1.0.0",
                 contact = @Contact(
                         name = "Nikiforov Vitaly",
                         email = "nikvitya@yandex.ru",

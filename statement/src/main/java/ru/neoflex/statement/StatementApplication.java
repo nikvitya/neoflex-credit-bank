@@ -6,9 +6,9 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @EnableFeignClients
 @SpringBootApplication
-public class DealApplication {
+public class StatementApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(DealApplication.class, args);
+        SpringApplication.run(StatementApplication.class, args);
     }
 }

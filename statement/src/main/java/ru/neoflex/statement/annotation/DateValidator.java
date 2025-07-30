@@ -1,4 +1,4 @@
-package ru.neoflex.deal.annotation;
+package ru.neoflex.statement.annotation;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;

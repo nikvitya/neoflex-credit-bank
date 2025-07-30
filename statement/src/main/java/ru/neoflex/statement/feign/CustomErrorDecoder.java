@@ -1,4 +1,4 @@
-package ru.neoflex.deal.feign;
+package ru.neoflex.statement.feign;
 
 import feign.Response;
 import feign.codec.ErrorDecoder;
