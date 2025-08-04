@@ -5,10 +5,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.neoflex.deal.dto.CreditDto;
+import ru.neoflex.deal.dto.EmailMessageDto;
 import ru.neoflex.deal.dto.FinishRegistrationRequestDto;
 import ru.neoflex.deal.dto.LoanOfferDto;
 import ru.neoflex.deal.dto.LoanStatementRequestDto;
 import ru.neoflex.deal.enums.ApplicationStatus;
+import ru.neoflex.deal.exception.ScoringException;
 import ru.neoflex.deal.feign.CalculatorFeignClient;
 import ru.neoflex.deal.mapper.CreditMapper;
 import ru.neoflex.deal.mapper.OfferMapper;
@@ -19,6 +22,7 @@ import ru.neoflex.deal.repository.CreditRepository;
 import ru.neoflex.deal.repository.StatementRepository;
 import ru.neoflex.deal.service.ClientService;
 import ru.neoflex.deal.service.DealService;
+import ru.neoflex.deal.service.KafkaMessagingService;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -28,6 +32,9 @@ import java.util.stream.Collectors;
 
 import static ru.neoflex.deal.enums.ApplicationStatus.*;
 import static ru.neoflex.deal.enums.ChangeType.AUTOMATIC;
+import static ru.neoflex.deal.enums.Theme.CREATE_DOCUMENTS;
+import static ru.neoflex.deal.enums.Theme.FINISH_REGISTRATION;
+import static ru.neoflex.deal.enums.Theme.STATEMENT_DENIED;
 
 @Service
 @RequiredArgsConstructor
@@ -41,6 +48,7 @@ public class DealServiceImpl implements DealService {
     private final CreditMapper creditMapper;
     private final ScoringDataMapper scoringDataMapper;
     private final ClientService clientService;
+    private final KafkaMessagingService kafkaMessagingService;
 
     @Override
     public List<LoanOfferDto> calculateLoanOffers(LoanStatementRequestDto loanStatement) {
@@ -75,6 +83,13 @@ public class DealServiceImpl implements DealService {
         statement.setAppliedOffer(appliedOffer);
         log.info("Statement with selected offer saved = {}", findStatementById(statement.getId()));
 
+        var emailMessage = EmailMessageDto.builder()
+                .address(statement.getClient().getEmail())
+                .theme(FINISH_REGISTRATION)
+                .statementId(String.valueOf(loanOffer.getStatementId()))
+                .build();
+        kafkaMessagingService.sendMessage("finish-registration", emailMessage);
+
     }
 
     @Override
@@ -90,17 +105,37 @@ public class DealServiceImpl implements DealService {
         var scoringData = scoringDataMapper.toScoringDataDto(finishRegistration, offer, client, passportData);
         log.info("ScoringData prepared = {}", scoringData);
 
-        var creditDto = calculatorFeignClient.calculateCredit(scoringData);
-        log.info("CreditDto get from CalculatorMS = {}", creditDto);
+        CreditDto creditDto = null;
+        try {
+            creditDto = calculatorFeignClient.calculateCredit(scoringData);
+            log.info("CreditDto get from CalculatorMS = {}", creditDto);
 
-        var credit = creditMapper.toCredit(creditDto);
-        var savedCredit = creditRepository.save(credit);
-        log.info("Credit saved = {}", savedCredit);
+        } catch (ScoringException exception) {
+            log.info(exception.getMessage());
 
-        saveStatus(statement, CC_DENIED);
+            var emailMessage = EmailMessageDto.builder()
+                    .address(statement.getClient().getEmail())
+                    .theme(STATEMENT_DENIED)
+                    .statementId(statementId)
+                    .build();
+            kafkaMessagingService.sendMessage("statement-denied", emailMessage);
+        }
 
-        clientService.finishRegistration(client, finishRegistration);
+        if (creditDto != null) {
+            var credit = creditMapper.toCredit(creditDto);
+            var savedCredit = creditRepository.save(credit);
+            statement.setCredit(savedCredit);
+            log.info("Credit saved = {}", savedCredit);
 
+            clientService.finishRegistration(client, finishRegistration);
+
+            var emailMessage = EmailMessageDto.builder()
+                    .address(statement.getClient().getEmail())
+                    .theme(CREATE_DOCUMENTS)
+                    .statementId(statementId)
+                    .build();
+            kafkaMessagingService.sendMessage("create-documents", emailMessage);
+        }
     }
 
     private void saveStatus(Statement statement, ApplicationStatus status) {
