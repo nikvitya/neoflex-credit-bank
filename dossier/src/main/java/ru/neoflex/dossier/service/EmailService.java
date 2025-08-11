@@ -13,7 +13,10 @@ import ru.neoflex.dossier.dto.CreditDto;
 import ru.neoflex.dossier.exception.EmailServiceException;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Objects;
+import java.util.UUID;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -40,14 +43,15 @@ public class EmailService {
             log.info("Message sent");
 
         } catch (Exception exception) {
-            log.error("Sending email exception: " + exception.getMessage());
-            throw new EmailServiceException(exception.getMessage());
+            log.error("Failed to send email to {}", to, exception);
+            throw new EmailServiceException("Sending email exception", exception);
         }
     }
 
     @Async
     public void sendMessageWithAttachment(String to, String subject, String text, CreditDto creditDto) {
         log.info("Send email with attachment");
+        File file = null;
 
         try {
             var message = emailSender.createMimeMessage();
@@ -58,18 +62,32 @@ public class EmailService {
             helper.setText(text);
             log.info("Message created");
 
-            var file = new File(fileCreator.createTxtFile(creditDto).toString());
+            file = new File(fileCreator.createTxtFile(creditDto).toString());
+
             var documents = new FileSystemResource(file);
 
-            helper.addAttachment(Objects.requireNonNull(documents.getFilename()), documents);
+            String attachmentName = documents.getFilename() != null
+                    ? documents.getFilename()
+                    : "document_" + UUID.randomUUID().toString();
+
+            helper.addAttachment(attachmentName, documents);
             log.info("Attachment added");
 
             emailSender.send(message);
             log.info("Message sent");
 
         } catch (Exception exception) {
-            log.error("Sending email exception: " + exception.getMessage());
-            throw new EmailServiceException(exception.getMessage());
+            log.error("Failed to send email to {}", to, exception);
+            throw new EmailServiceException("Sending email exception", exception);
+        } finally {
+            if (file != null && file.exists()) {
+                try {
+                    Files.deleteIfExists(file.toPath());
+                    log.debug("Temporary file deleted: {}", file.getAbsolutePath());
+                } catch (IOException e) {
+                    log.warn("Failed to delete temp file {}", file.getAbsolutePath(), e);
+                }
+            }
         }
     }
 }

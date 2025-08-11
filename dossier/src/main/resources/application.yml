@@ -3,6 +3,13 @@ server:
 
 spring:
   kafka:
+    topics:
+      finish-registration: finish-registration
+      create-documents: create-documents
+      send-documents: send-documents
+      send-ses: send-ses
+      credit-issued: credit-issued
+      statement-denied: statement-denied
     bootstrap-servers: localhost:29092
     consumer:
       group-id: "dossier"

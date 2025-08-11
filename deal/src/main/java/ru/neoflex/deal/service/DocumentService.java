@@ -37,7 +37,7 @@ public class DocumentService {
                 .theme(SEND_DOCUMENTS)
                 .statementId(statementId)
                 .build();
-        kafkaMessagingService.sendMessage("send-documents", emailMessage);
+        kafkaMessagingService.sendMessage("#{@kafkaTopicsProperties.sendDocuments}", emailMessage);
     }
 
     public void signDocuments(String statementId) {
@@ -54,7 +54,7 @@ public class DocumentService {
                 .theme(SEND_SES)
                 .statementId(statementId)
                 .build();
-        kafkaMessagingService.sendMessage("send-ses", emailMessage);
+        kafkaMessagingService.sendMessage("#{@kafkaTopicsProperties.sendSes}", emailMessage);
     }
 
     public void verifySesCode(String statementId, String sesCode) {
@@ -77,7 +77,7 @@ public class DocumentService {
                 .theme(Theme.CREDIT_ISSUED)
                 .statementId(statementId)
                 .build();
-        kafkaMessagingService.sendMessage("credit-issued", emailMessage);
+        kafkaMessagingService.sendMessage("#{@kafkaTopicsProperties.creditIssued}", emailMessage);
     }
 
     private Statement findStatementById(UUID statementId) {
