@@ -1,0 +1,17 @@
+server:
+  port: 8085
+
+logging:
+  level:
+    springframework:
+      web:
+        servlet:
+          DispatcherServlet: debug
+    web: info
+    ru.neoflex.deal.feign: debug
+    ru.neoflex.statement.feign: debug
+
+deal:
+  url: 'http://localhost:8082/deal'
+statement:
+  url: 'http://localhost:8083/statement'
