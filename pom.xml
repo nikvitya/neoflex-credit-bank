@@ -45,6 +45,7 @@
 		<flyway.version>10.17.0</flyway.version>
 		<hibernate-types-60.version>2.21.1</hibernate-types-60.version>
 		<spring-cloud.version>2024.0.1</spring-cloud.version>
+		<jacoco.version>0.8.10</jacoco.version>
 	</properties>
 
 	<dependencyManagement>

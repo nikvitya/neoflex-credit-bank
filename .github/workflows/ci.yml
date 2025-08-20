@@ -40,5 +40,11 @@ jobs:
       - name: Build module with Maven
         run: mvn -B -f ${{ matrix.module }}/pom.xml clean package
 
+      - name: Run tests and generate coverage report
+        if: ${{ matrix.module != 'dossier' && matrix.module != 'gateway' }}
+        run: mvn -B -f ${{ matrix.module }}/pom.xml test jacoco:report
+
+
+
 
 
