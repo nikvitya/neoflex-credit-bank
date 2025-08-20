@@ -1,0 +1,27 @@
+package ru.neoflex.deal.dto;
+
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.UUID;
+
+@Schema(description = "Сокращённые данные клиента")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class ClientDtoShort {
+
+    @Schema(description = "Уникальный идентификатор клиента", example = "3422b448-2460-4fd2-9183-8000de6f8343")
+    private UUID id;
+
+    @Schema(description = "Фамилия", example = "Ivanov")
+    private String lastName;
+
+    @Schema(description = "Имя", example = "Ivan")
+    private String firstName;
+
+    @Schema(description = "Отчество", example = "Ivanovich")
+    private String middleName;
+}
