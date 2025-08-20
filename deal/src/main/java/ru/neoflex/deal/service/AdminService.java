@@ -15,6 +15,7 @@ import ru.neoflex.deal.model.jsonb.StatementStatus;
 import ru.neoflex.deal.repository.StatementRepository;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -44,13 +45,15 @@ public class AdminService {
 
         var statementStatus = new StatementStatus(status, LocalDateTime.now(), changeType);
         List<StatementStatus> history = statement.getStatusHistory();
+        if (history == null) {
+            history = new ArrayList<>();
+            statement.setStatusHistory(history);
+        }
         history.add(statementStatus);
         log.info("Status saved in history: {}", history.stream()
                 .map(StatementStatus::toString)
                 .collect(Collectors.joining(", ")));
     }
-
-
 
 
     public StatementDtoFull findStatementById(String statementId) {
