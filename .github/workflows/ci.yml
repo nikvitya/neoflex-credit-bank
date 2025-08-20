@@ -24,7 +24,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Set up JDK 21
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: 'corretto'
           java-version: '21'
@@ -38,7 +38,7 @@ jobs:
             ${{ runner.os }}-maven-
 
       - name: Build module with Maven
-        run: mvn -B -f ${{ matrix.module }}/pom.xml clean install
+        run: mvn -B -f ${{ matrix.module }}/pom.xml clean package
 
 
 
