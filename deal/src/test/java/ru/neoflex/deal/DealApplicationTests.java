@@ -1,10 +1,10 @@
-package ru.neoflex.statement;
+package ru.neoflex.deal;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class StatementApplicationTests {
+class DealApplicationTests {
 
     @Test
     void contextLoads() {

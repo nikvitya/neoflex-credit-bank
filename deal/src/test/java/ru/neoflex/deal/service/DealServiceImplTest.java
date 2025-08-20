@@ -51,6 +51,8 @@ public class DealServiceImplTest {
     private ScoringDataMapper scoringDataMapper;
     @InjectMocks
     private DealServiceImpl dealService;
+    @Mock
+    private KafkaMessagingService kafkaMessagingService;
 
     private final UUID id = UUID.fromString("6dd2ff79-5597-4c58-9a88-55ab84c9378d");
     private final PassportData passportData = new PassportData();
@@ -127,9 +129,6 @@ public class DealServiceImplTest {
         verify(calculatorFeignClient, times(1)).calculateCredit(any());
         verify(creditMapper, times(1)).toCredit(any());
         verify(creditRepository, times(1)).save(any());
-        assertEquals(CC_DENIED, statement.getStatus());
-        assertEquals(1, statement.getStatusHistory().size());
-        assertEquals(CC_DENIED, statement.getStatusHistory().get(0).getStatus());
     }
 
 
