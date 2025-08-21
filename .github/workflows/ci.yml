@@ -46,7 +46,7 @@ jobs:
 
       - name: Upload coverage to Codecov
         if: ${{ matrix.module != 'dossier' && matrix.module != 'gateway' }}
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v5
         with:
           files: ${{ matrix.module }}/target/site/jacoco/jacoco.xml
           fail_ci_if_error: true
