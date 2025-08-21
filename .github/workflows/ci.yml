@@ -44,6 +44,14 @@ jobs:
         if: ${{ matrix.module != 'dossier' && matrix.module != 'gateway' }}
         run: mvn -B -f ${{ matrix.module }}/pom.xml test jacoco:report
 
+      - name: Upload coverage to Codecov
+        if: ${{ matrix.module != 'dossier' && matrix.module != 'gateway' }}
+        uses: codecov/codecov-action@v3
+        with:
+          files: ${{ matrix.module }}/target/site/jacoco/jacoco.xml
+          fail_ci_if_error: true
+          token: ${{ secrets.CODECOV_TOKEN }}
+
 
 
 
